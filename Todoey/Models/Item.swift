@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Item: Codable {
+class MyItem: Codable {
     var title = ""
     var done = false
     
