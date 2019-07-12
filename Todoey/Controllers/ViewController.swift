@@ -10,7 +10,7 @@ import UIKit
 //import CoreData
 import RealmSwift
 
-class TodoTableViewController: UITableViewController {
+class TodoTableViewController: SwipeTableViewController {
     
     let realm = try! Realm()
     var itemArray: Results<RItem>? // [Item]()
@@ -42,7 +42,8 @@ class TodoTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath)
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let item = itemArray?[indexPath.row] {
             cell.textLabel?.text = item.title
@@ -157,6 +158,18 @@ class TodoTableViewController: UITableViewController {
 //        }
         
         tableView.reloadData()
+    }
+    
+    override func updateModel(at indexPath: IndexPath) {
+        if let category = self.itemArray?[indexPath.row] {
+            do {
+                try self.realm.write {
+                    self.realm.delete(category)
+                }
+            } catch {
+                print(error)
+            }
+        }
     }
 }
 
